@@ -1,5 +1,44 @@
 import React from 'react';
-import '../App.css';
+import styled from 'styled-components';
+
+const Form = styled.form`
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	height: 100vh;
+
+	p {
+		margin: 0
+	}
+	@media (max-width: 400px) {
+
+	}
+`;
+
+const Overlay = styled.div`
+	position: fixed;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	top: 0;
+	width: 100vw;
+	height: 100vh;
+	background: #00000040;
+`;
+
+const ModalContainer = styled.div`
+	width: 30%;
+	min-height: 100px;
+	text-align: center;
+	background: #FFF;
+	border-radius: 4px;
+	box-shadow: 2px 2px 2px 0px #00000050;
+`;
+
+const Input = styled.input`
+	border-color: ${props => props.erro && 'red'};
+`;
 
 
 export default class SingUp extends React.Component {
@@ -12,6 +51,7 @@ export default class SingUp extends React.Component {
 			password: '',
 			password2: '',
 			erro: '',
+			modalOpen: false,
 		}
 	}
 
@@ -20,6 +60,10 @@ export default class SingUp extends React.Component {
 		
 		if (this.state.password === this.state.password2) {
 			this.props.criarConta(this.state.name, this.state.email, this.state.password);
+			this.setState({
+				createSuccess: true,
+				erro:'',
+			});
 		} else {
 			this.setState({erro:'senha incorreta'});
 		}
@@ -49,10 +93,20 @@ export default class SingUp extends React.Component {
 		})
 	}
 
+	renderModal = () => (
+		<Overlay onClick={() => this.setState({createSuccess: false})}>
+			<ModalContainer>
+				<p>Conta criada com sucesso!</p>
+				<button onClick={() => this.props.clickCriarconta('login')}>Fazer login</button>
+			</ModalContainer>
+		</Overlay>
+	)
+
 	render() {
+		const { createSuccess } = this.state;
 		return (
 			<>
-				<form onSubmit={this.handleSubmit}>
+				<Form onSubmit={this.handleSubmit}>
 					<label>
 						<p>Nome</p>
 						<input
@@ -74,27 +128,30 @@ export default class SingUp extends React.Component {
 					</label>
 					<label>
 						<p>Senha</p>
-						<input
+						<Input
 							required
 							type='password'
 							placeholder='123'
 							onChange={this.changePassword}
+							erro={this.state.erro}
 						/>
 					</label>
 					<label>
 						<p>Confirmação de senha</p>
-						<input
+						<Input
 							value={this.state.password2}
 							required
 							type='password'
 							placeholder='123'
 							onChange={this.changePassword2}
+							erro={this.state.erro}
 						/>
 					</label>
 					<button>Entrar</button>
 					<p>{this.state.erro}</p>
-				</form>
-				<button onClick={() => this.props.clickCriarconta('login')}>Crica Aki</button>
+					<p onClick={() => this.props.clickCriarconta('login')}>Fazer login</p>
+				</Form>
+				{createSuccess && this.renderModal()}
 			</>
 		)
 	}

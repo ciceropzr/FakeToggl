@@ -29,8 +29,7 @@ export default class Login extends React.Component {
 		ev.preventDefault();
 		this.props.comparacao(this.state.email, this.state.senha)
 	}
- 	
-	
+
 	render() {
 		return (
 			<div className='div-login'>
@@ -51,5 +50,4 @@ export default class Login extends React.Component {
 			</div>
 		)
 	}
-	
 }

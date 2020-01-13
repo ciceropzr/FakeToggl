@@ -26,7 +26,6 @@ class App extends Component {
 				email: email,
 				password: password,
 			},
-			currentScreen: 'login',
 		});
 	}
 
